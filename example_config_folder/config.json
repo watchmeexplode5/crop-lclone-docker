@@ -1,0 +1,105 @@
+{
+    "core": {
+        "dry_run": false,
+        "rclone_binary_path": "/usr/bin/rclone",
+        "rclone_config_path": "/config/rclone/rclone.conf"
+    },
+    "hidden": {
+        "/mnt/local/.unionfs-fuse": {
+            "hidden_remotes": [
+                "team_drive_crypt"
+            ]
+        }
+	},
+    "notifications": {},
+    "nzbget": {
+        "enabled": false,
+        "url": "http://LOCAL_IP_OF_NZBGET:6789"
+    },
+    "plex": {
+        "enabled": false,
+        "max_streams_before_throttle": 1,
+        "notifications": false,
+        "poll_interval": 60,
+        "rclone": {
+            "throttle_speeds": {
+                "1": "30M",
+                "2": "20M",
+                "3": "10M",
+                "4": "5M",
+                "5": "5M"
+            },
+            "url": "http://LOCAL_IP_OF_PLEX:32400"
+        },
+        "token": "",
+        "url": "https://plex.domain.com"
+    },
+    "remotes": {
+        "team_drive_crypt": {
+			"hidden_remote": "team_drive_crypt:",
+            "rclone_excludes": [
+                "**partial~",
+                "**_HIDDEN~",
+                ".unionfs/**",
+                ".unionfs-fuse/**"
+            ],
+            "rclone_extras": {
+                "--checkers": 16,
+                "--drive-chunk-size": "64M",
+                "--skip-links": null,
+                "--stats": "60s",
+                "--transfers": 8,
+                "--user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36",
+                "--verbose": 1
+            },
+            "rclone_sleeps": {
+                "Failed to copy: googleapi: Error 403: User rate limit exceeded": {
+                    "count": 5,
+                    "sleep": 25,
+                    "timeout": 3600
+                }
+            },
+			"rclone_command": "move",
+            "remove_empty_dir_depth": 2,
+            "sync_remote": "team_drive_crypt:/Backups",
+            "upload_folder": "/local",
+            "upload_remote": "team_drive_crypt:"
+        }
+    },
+    "syncer": {},
+    "uploader": {
+        "team_drive_crypt": {
+            "can_be_throttled": true,
+            "check_interval": 5,
+            "exclude_open_files": true,
+            "max_size_gb": 1,
+			"service_account_path": "/config/service_accounts/",
+            "opened_excludes": [
+                "/downloads/"
+            ],
+            "schedule": {
+                "allowed_from": "04:00",
+                "allowed_until": "08:00",
+                "enabled": false
+            },
+            "size_excludes": [
+                "downloads/*"
+            ],
+            "mover": {
+               "enabled": true,
+               "move_from_remote": "team_drive:",
+               "move_to_remote": "google:",
+               "rclone_extras": {
+                 "--delete-empty-src-dirs": null,
+                 "--create-empty-src-dirs": null,
+                 "--stats": "60s",
+                 "--verbose": 1,
+				 "-vv": null,
+                 "--no-traverse": null,
+                 "--drive-server-side-across-configs": null,
+                 "--user-agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_4) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.131 Safari/537.36"
+               }
+			}
+        }
+    }
+}

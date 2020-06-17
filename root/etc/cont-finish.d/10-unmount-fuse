@@ -1,0 +1,15 @@
+#!/usr/bin/with-contenv sh
+
+MOUNTCHECK_LOCATION="$CLOUD_LOCATION$MEDIA_SUBFOLDER/mount.check"
+
+exec s6-setuidgid root fusermount -u -z $UNION_LOCATION &
+exec s6-setuidgid root fusermount -u -z $CLOUD_LOCATION$MEDIA_SUBFOLDER &
+exec s6-setuidgid root fusermount -u -z $LANDING_LOCATION$MEDIA_SUBFOLDER &
+
+while [ -f $MOUNTCHECK_LOCATION ]
+do
+  echo "Rclone mounts not disconnected yet"
+  exec s6-setuidgid root fusermount -u -z $CLOUD_LOCATION$MEDIA_SUBFOLDER &
+  exec s6-setuidgid root fusermount -u -z $LANDING_LOCATION$MEDIA_SUBFOLDER &
+  sleep 5
+done
